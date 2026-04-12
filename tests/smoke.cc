@@ -42,7 +42,7 @@ struct service_cfg
 };
 
 const auto module_desc = pulsejson::make_object<module_cfg>(
-    pulsejson::kv("enabled", &module_cfg::enabled));
+    pulsejson::val("enabled", &module_cfg::enabled));
 
 const auto recovery_json = pulsejson::enum_string<recovery_mode>({
     {"Manual", recovery_mode::manual},
@@ -51,10 +51,10 @@ const auto recovery_json = pulsejson::enum_string<recovery_mode>({
 
 const auto tolerant_service_desc = pulsejson::make_object<service_cfg>(
     pulsejson::must("name", &service_cfg::name),
-    pulsejson::kv("timeout_ms", &service_cfg::timeout_ms),
-    pulsejson::kv("label", &service_cfg::label),
-    pulsejson::kv("boot_grace_ms", &service_cfg::boot_grace),
-    pulsejson::kv("recovery", &service_cfg::recovery, recovery_json),
+    pulsejson::val("timeout_ms", &service_cfg::timeout_ms),
+    pulsejson::val("label", &service_cfg::label),
+    pulsejson::val("boot_grace_ms", &service_cfg::boot_grace),
+    pulsejson::val("recovery", &service_cfg::recovery, recovery_json),
     pulsejson::obj("module", &service_cfg::module, module_desc),
     pulsejson::arr("channels", &service_cfg::channels),
     pulsejson::arr("modules", &service_cfg::modules, module_desc),
@@ -64,7 +64,7 @@ const auto tolerant_service_desc = pulsejson::make_object<service_cfg>(
 const auto strict_service_desc = pulsejson::make_object<service_cfg>(
     pulsejson::error_unknown,
     pulsejson::must("name", &service_cfg::name),
-    pulsejson::kv("timeout_ms", &service_cfg::timeout_ms));
+    pulsejson::val("timeout_ms", &service_cfg::timeout_ms));
 
 void expect_throw_contains(const std::function<void()>& fn,
     const std::string_view expected)

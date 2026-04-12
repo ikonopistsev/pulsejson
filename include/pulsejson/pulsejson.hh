@@ -27,8 +27,8 @@
 //   // 2. Declare descriptor
 //   static const auto cfg_desc = pulsejson::make_object<service_cfg>(
 //       pulsejson::must("name",       &service_cfg::name),
-//       pulsejson::kv("enabled",      &service_cfg::enabled),
-//       pulsejson::kv("timeout_ms",   &service_cfg::timeout_ms)
+//       pulsejson::val("enabled",      &service_cfg::enabled),
+//       pulsejson::val("timeout_ms",   &service_cfg::timeout_ms)
 //   );
 //
 //   // 3. Generate
@@ -195,16 +195,16 @@ auto required(std::string name, T C::*ptr, V value)
 
 // ---------------------------------------------------------------------------
 // Short readable aliases for descriptor blocks.
-// kv: scalar/custom value, obj: nested object, arr: JSON array.
+// val: scalar/custom value, obj: nested object, arr: JSON array.
 // ---------------------------------------------------------------------------
 template <typename T, typename C>
-auto kv(std::string name, T C::*ptr)
+auto val(std::string name, T C::*ptr)
 {
     return pair(std::move(name), ptr);
 }
 
 template <typename T, typename C, typename V>
-auto kv(std::string name, T C::*ptr, V value)
+auto val(std::string name, T C::*ptr, V value)
 {
     return pair(std::move(name), ptr, std::move(value));
 }
@@ -277,7 +277,7 @@ auto required_dict(std::string name, Dict C::*ptr, V item_reader)
 
 // ---------------------------------------------------------------------------
 // must* — preferred mandatory-field spelling.
-// This is the same behavior as required*, but reads closer to kv/obj/arr.
+// This is the same behavior as required*, but reads closer to val/obj/arr.
 // ---------------------------------------------------------------------------
 template <typename T, typename C>
 auto must(std::string name, T C::*ptr)

@@ -69,7 +69,7 @@ Containers:
 
 static const auto desc = pulsejson::make_object<MyStruct>(
     pulsejson::must("name", &MyStruct::name),
-    pulsejson::kv("timeout_ms", &MyStruct::timeout),
+    pulsejson::val("timeout_ms", &MyStruct::timeout),
     pulsejson::arr("ids", &MyStruct::ids)
 );
 ```
@@ -81,14 +81,14 @@ config file should reject typos:
 static const auto strict_desc = pulsejson::make_object<MyStruct>(
     pulsejson::error_unknown,
     pulsejson::must("name", &MyStruct::name),
-    pulsejson::kv("timeout_ms", &MyStruct::timeout)
+    pulsejson::val("timeout_ms", &MyStruct::timeout)
 );
 ```
 
 Field helpers:
 
 ```cpp
-pulsejson::kv("name", &T::name)
+pulsejson::val("name", &T::name)
 pulsejson::obj("sub", &T::sub, sub_desc)
 pulsejson::arr("ids", &T::ids)
 pulsejson::arr("items", &T::items, item_desc)
@@ -136,7 +136,7 @@ static const auto recovery_policy_json =
     });
 
 static const auto desc = pulsejson::make_object<cfg>(
-    pulsejson::kv("policy", &cfg::policy, recovery_policy_json)
+    pulsejson::val("policy", &cfg::policy, recovery_policy_json)
 );
 ```
 
@@ -219,8 +219,8 @@ static const auto recovery_policy_json =
     });
 
 static const auto recovery_desc = pulsejson::make_object<recovery_cfg>(
-    pulsejson::kv("policy", &recovery_cfg::mode, recovery_policy_json),
-    pulsejson::kv("timeout_ms", &recovery_cfg::timeout)
+    pulsejson::val("policy", &recovery_cfg::mode, recovery_policy_json),
+    pulsejson::val("timeout_ms", &recovery_cfg::timeout)
 );
 
 static const auto safetyd_desc = pulsejson::make_object<safetyd_cfg>(
