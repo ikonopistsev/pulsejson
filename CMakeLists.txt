@@ -4,19 +4,29 @@ project(pulsejson LANGUAGES CXX)
 
 add_library(pulsejson INTERFACE)
 
-set(PULSEJSON_RAPIDJSON_INCLUDE_DIR
-    "${CMAKE_CURRENT_LIST_DIR}/../rapidjson/include"
-    CACHE PATH "path to rapidjson/include")
-
-if (NOT EXISTS "${PULSEJSON_RAPIDJSON_INCLUDE_DIR}/rapidjson/document.h")
-    message(FATAL_ERROR
-        "pulsejson requires rapidjson; set PULSEJSON_RAPIDJSON_INCLUDE_DIR")
-endif()
-
 target_include_directories(pulsejson INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-    $<BUILD_INTERFACE:${PULSEJSON_RAPIDJSON_INCLUDE_DIR}>
 )
+
+if (TARGET RapidJSON::RapidJSON)
+    target_link_libraries(pulsejson INTERFACE RapidJSON::RapidJSON)
+elseif (TARGET RapidJSON)
+    target_link_libraries(pulsejson INTERFACE RapidJSON)
+else()
+    set(PULSEJSON_RAPIDJSON_INCLUDE_DIR
+        "${CMAKE_CURRENT_LIST_DIR}/../rapidjson/include"
+        CACHE PATH "path to rapidjson/include")
+
+    if (NOT EXISTS "${PULSEJSON_RAPIDJSON_INCLUDE_DIR}/rapidjson/document.h")
+        message(FATAL_ERROR
+            "pulsejson requires RapidJSON::RapidJSON or "
+            "PULSEJSON_RAPIDJSON_INCLUDE_DIR")
+    endif()
+
+    target_include_directories(pulsejson INTERFACE
+        $<BUILD_INTERFACE:${PULSEJSON_RAPIDJSON_INCLUDE_DIR}>
+    )
+endif()
 
 target_compile_features(pulsejson INTERFACE cxx_std_20)
 

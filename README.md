@@ -244,8 +244,10 @@ std::string out = safetyd_desc.to_pretty_string(cfg);
 ## CMake Integration
 
 `pulsejson` is included as a bundled dependency via the root `CMakeLists.txt`.
-It depends on bundled `deps/rapidjson` unless `PULSEJSON_RAPIDJSON_INCLUDE_DIR`
-is overridden.
+It links against a RapidJSON CMake target when one exists. The preferred target
+name is `RapidJSON::RapidJSON`; `RapidJSON` is also accepted for compatibility.
+If neither target exists, `pulsejson` falls back to
+`PULSEJSON_RAPIDJSON_INCLUDE_DIR`.
 
 ```cmake
 option(PULSEMOU_WITH_BUNDLED_RAPIDJSON ...)
@@ -262,6 +264,10 @@ can include it without extra target wiring:
 For standalone use:
 
 ```cmake
+add_library(RapidJSON::RapidJSON INTERFACE IMPORTED)
+target_include_directories(RapidJSON::RapidJSON INTERFACE /path/to/rapidjson/include)
+
+add_subdirectory(path/to/pulsejson)
 target_link_libraries(my-target PRIVATE pulsejson)
 ```
 
