@@ -1,0 +1,17 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if (NOT TARGET RapidJSON::RapidJSON)
+    find_dependency(RapidJSON CONFIG)
+endif()
+
+if (TARGET RapidJSON AND NOT TARGET RapidJSON::RapidJSON)
+    add_library(RapidJSON::RapidJSON INTERFACE IMPORTED)
+    target_link_libraries(RapidJSON::RapidJSON INTERFACE RapidJSON)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/pulsejson-targets.cmake")
+
+set(pulsejson_pulsejson_FOUND TRUE)
+check_required_components(pulsejson)

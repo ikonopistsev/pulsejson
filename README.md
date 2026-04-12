@@ -32,7 +32,7 @@ configuration and diagnostic interchange format here.
 
 | Goal | Implementation |
 |---|---|
-| Header-only dependency | `pulsejson` is an `INTERFACE` CMake target |
+| Header-only dependency | `pulsejson` is an `INTERFACE` CMake target with public alias `PulseJSON::pulsejson` |
 | Type-safe descriptors | field types are deduced from member pointers |
 | RapidJSON output compatibility | descriptors write directly to `Writer`, `PrettyWriter` or any RapidJSON handler-style writer |
 | Explicit config invariants | mandatory fields, null handling and enum literals fail at parse time |
@@ -245,8 +245,9 @@ std::string out = safetyd_desc.to_pretty_string(cfg);
 
 `pulsejson` is included as a bundled dependency via the root `CMakeLists.txt`.
 It links against a RapidJSON CMake target when one exists. The preferred target
-name is `RapidJSON::RapidJSON`; `RapidJSON` is also accepted for compatibility.
-If neither target exists, `pulsejson` falls back to
+name is `RapidJSON::RapidJSON`; `RapidJSON` is also accepted for compatibility
+and normalized to `RapidJSON::RapidJSON`. If neither target exists, `pulsejson`
+falls back to
 `PULSEJSON_RAPIDJSON_INCLUDE_DIR`.
 
 ```cmake
@@ -268,7 +269,7 @@ add_library(RapidJSON::RapidJSON INTERFACE IMPORTED)
 target_include_directories(RapidJSON::RapidJSON INTERFACE /path/to/rapidjson/include)
 
 add_subdirectory(path/to/pulsejson)
-target_link_libraries(my-target PRIVATE pulsejson)
+target_link_libraries(my-target PRIVATE PulseJSON::pulsejson)
 ```
 
 Tests are registered as `pulsejson_smoke` when `BUILD_TESTING` and
