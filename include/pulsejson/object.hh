@@ -89,14 +89,14 @@ public:
         if (!v.IsObject())
             throw detail::expected("object", v);
 
-        std::set<std::string> seen;
+        std::set<std::string_view> seen;
         for (auto it = v.MemberBegin(); it != v.MemberEnd(); ++it) {
-            const std::string key{it->name.GetString(), it->name.GetStringLength()};
+            const std::string_view key{it->name.GetString(), it->name.GetStringLength()};
             auto found = sorted_pairs_.find(key);
             if (found == sorted_pairs_.end()) {
                 if (options_.unknown == unknown_policy::error)
-                    throw std::runtime_error{"pulsejson: unknown field '" +
-                        key + "'"};
+                    throw std::runtime_error{
+                        "pulsejson: unknown field '" + std::string{key} + "'"};
                 continue;
             }
 

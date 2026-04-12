@@ -18,8 +18,8 @@ namespace detail {
 template <typename C>
 struct prototype
 {
-    using value_pointer = value<C>*;
-    using sorted_pairs  = std::map<std::string, value_pointer>;
+    using value_pointer = const value<C>*;
+    using sorted_pairs  = std::map<std::string, value_pointer, std::less<>>;
 
     // ------------------------------------------------------------------
     // sort_next — populates sorted_pairs_ from the pairs tuple
@@ -31,7 +31,7 @@ struct prototype
         explicit sort_next(sorted_pairs& sp) noexcept : sp_(sp) {}
 
         template <typename Value>
-        void operator()(std::pair<std::string, Value>& p)
+        void operator()(const std::pair<std::string, Value>& p)
         {
             sp_.insert({p.first, static_cast<value_pointer>(&p.second)});
         }

@@ -35,6 +35,8 @@ public:
             throw detail::expected("array", v);
 
         out.clear();
+        if constexpr (requires { out.reserve(std::size_t{}); })
+            out.reserve(v.Size());
         std::size_t index = 0;
         for (const auto& elem : v.GetArray()) {
             typename Container::value_type item{};
